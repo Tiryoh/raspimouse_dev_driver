@@ -20,7 +20,6 @@
  *
  */
 
-#include <asm/uaccess.h>
 #include <linux/cdev.h>
 #include <linux/delay.h>
 #include <linux/device.h>
@@ -28,6 +27,7 @@
 #include <linux/io.h>
 #include <linux/module.h>
 #include <linux/slab.h>
+#include <linux/uaccess.h>
 
 MODULE_AUTHOR("Daisuke Sato");
 MODULE_DESCRIPTION("device driver of Raspberry Pi Mouse");
@@ -42,8 +42,6 @@ static volatile int cdev_index = 0;
 static volatile int open_counter = 0;
 
 #define MAX_BUFLEN 64
-unsigned char sw_buf[MAX_BUFLEN];
-static int buflen = 0;
 
 #define DEV_MAJOR 0
 #define DEV_MINOR 0
@@ -100,8 +98,10 @@ static void rpi_gpio_clear32(uint32_t mask, uint32_t val) {
   gpio_base[RPI_GPCLR0_INDEX] = val & mask;
 }
 
-static ssize_t sw_read(struct file *filep, const char *buf, size_t count,
+static ssize_t sw_read(struct file *filep, char __user *buf, size_t count,
                        loff_t *pos) {
+  unsigned char sw_buf[MAX_BUFLEN];
+  int buflen = 0;
   unsigned int ret = 0;
   unsigned int pin = SW1_PIN;
   int index;
@@ -149,7 +149,6 @@ static ssize_t sw_read(struct file *filep, const char *buf, size_t count,
     return 0;
   }
   *pos += count;
-  buflen = 0;
   return count;
 }
 
