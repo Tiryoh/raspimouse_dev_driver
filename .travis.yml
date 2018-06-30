@@ -20,18 +20,19 @@ cache:
     - $HOME/repo/raspberrypi
 
 install:
-  - export DRIVER_SRC_DIR=`pwd` && echo $DRIVER_SRC_DIR
+  - export DRIVER_SRC_DIR=$(pwd)/src && echo $DRIVER_SRC_DIR
+  - export REPOSITORY_DIR=$(pwd) && echo $REPOSITORY_DIR
   - mkdir -p $HOME/repo/raspberrypi && cd $HOME/repo/raspberrypi
   - git clone --depth 1 https://github.com/raspberrypi/tools.git
 
 before_script:
     - cd $HOME/repo/raspberrypi && git clone -b $RPI_LINUX_VER https://github.com/raspberrypi/linux.git
     - cd $HOME/repo/raspberrypi/linux && make clean && git reset --hard HEAD && git checkout $RPI_LINUX_COMMIT_HASH
-    - cp $DRIVER_SRC_DIR/.test/$CONFIG_FILE ./.config
+    - cp $REPOSITORY_DIR/.test/$CONFIG_FILE $HOME/repo/raspberrypi/linux/.config
     - make CROSS_COMPILE=$HOME/repo/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf- ARCH=arm oldconfig
     - make CROSS_COMPILE=$HOME/repo/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf- ARCH=arm -j 8
 
 script:
     - cd $DRIVER_SRC_DIR
-    - make -f ./.test/Makefile.crosscompile
-    - make -f ./.test/Makefile.crosscompile clean
+    - make -f $REPOSITORY_DIR/.test/Makefile.crosscompile
+    - make -f $REPOSITORY_DIR/.test/Makefile.crosscompile clean
