@@ -8,13 +8,6 @@ device driver of Raspberry Pi Mouse
 
 * Raspberry Pi 2 or Raspberry Pi 3
   * tested only on Raspberry Pi 3
-* Ubuntu Xenial 16.04
-  * Ubuntu (4.4.0-1009-raspi2)
-  * Ubuntu (4.4.0-1051-raspi2)
-  * Ubuntu MATE (4.1.19-v7+)
-  * Ubuntu MATE (4.4.38-v7+)
-* linux kernel source
-  * download kernel source into `/usr/src/linux`
 
 ## Installation
 
@@ -30,10 +23,10 @@ Next, download this repository.
 git clone https://github.com/Tiryoh/raspimouse_dev_driver.git
 ```
 
-After that, move into raspimouse_dev_driver directory and run make command.
+After that, move into `raspimouse_dev_driver/src` directory and run make command.
 
 ```
-cd raspimouse_dev_driver
+cd raspimouse_dev_driver/src
 make && sudo make install
 ```
 
